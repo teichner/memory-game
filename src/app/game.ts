@@ -78,7 +78,6 @@ export class Game implements CardPolicy {
     private shuffle<T>(arr: Array<T>): void {
         let randIndex;
         let temp;
-        // const lastIndex = arr.length - 1;
         for (let i = 0; i < arr.length - 1; i++) {
             randIndex = this.randInt(i, arr.length);
             temp = arr[i];
@@ -102,7 +101,7 @@ export class Game implements CardPolicy {
         private cardCount: number,
         private matchSize: number
     ) {
-        if (cardCount % matchSize !== 0) {
+        if (matchSize && cardCount % matchSize !== 0) {
             throw new Error("The card count must be a multiple of the match size");
         }
         this.#cards = this.generateCards();
