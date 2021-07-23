@@ -13,6 +13,8 @@ export class GameComponent implements OnInit {
     matchSize: 0
   });
 
+  #hiddenCards: Set<Card>;
+
   @Input('rowCount') rowCount: number = 4;
   @Input('columnCount') columnCount: number = 6;
   @Input('matchSize') matchSize: number = 2;
@@ -27,7 +29,7 @@ export class GameComponent implements OnInit {
   constructor(
     private gameService: GameService
   ) {
-
+    this.#hiddenCards = new Set<Card>();
   }
 
   ngOnInit(): void {
@@ -107,14 +109,6 @@ export class GameComponent implements OnInit {
       `Score: ${this.#game.matchedCards.length}`;
   }
 
-  // //TEST
-  // get cardSizeCombo(): any {
-  //   return {
-  //     width: this.cardSize,
-  //     height: this.cardSize
-  //   };
-  // }
-
   get rows(): Card[][] {
     const rows = [];
     const cards = this.#game.cards;
@@ -130,7 +124,7 @@ export class GameComponent implements OnInit {
   }
 
   isCardHidden(card: Card): boolean {
-    return this.removeOnMatch && this.#game.matchedCards.indexOf(card) >= 0;
+    return this.removeOnMatch && this.#hiddenCards.has(card);
   }
 
   faceUp(card: Card): boolean {
@@ -138,14 +132,18 @@ export class GameComponent implements OnInit {
   }
 
   onCardClick(card: Card): void {
-    console.log('card clicked', card);
     const state = this.#game.state;
     card.faceUp();
     if (state !== this.#game.state && this.#game.state === GameState.MISMATCH) {
       window.setTimeout(() => {
         this.#game.resetChoices();
       }, 500);
+    } else if (this.removeOnMatch && !this.#game.activeCards.length) {
+      window.setTimeout(() => {
+        for (let matched of this.#game.matchedCards) {
+          this.#hiddenCards.add(matched);
+        }
+      }, 500);
     }
   }
-
 }
