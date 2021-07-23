@@ -1,11 +1,10 @@
-import { Input, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
 import { Game, Card, GameState, CardState } from '../game';
 
 @Component({
   selector: 'app-game',
-  templateUrl: './game.component.svg',
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './game.component.svg'
 })
 export class GameComponent implements OnInit {
   #game: Game = this.gameService.initGame({
@@ -15,16 +14,19 @@ export class GameComponent implements OnInit {
 
   #hiddenCards: Set<Card>;
 
+  // Game mechanics
   @Input('rowCount') rowCount: number = 4;
   @Input('columnCount') columnCount: number = 6;
   @Input('matchSize') matchSize: number = 2;
+  @Input('removeOnMatch') removeOnMatch: boolean = false;
+
+  // Presentation
   @Input('cardSize') cardSize: number = 150;
   @Input('frameBorder') frameBorder: number = 5;
   @Input('circleBorder') circleBorder: number = 10;
   @Input('cardSpacing') cardSpacing: number = 20;
   @Input('patternCount') patternCount: number = 10;
   @Input('backFill') backFill: string = 'hsl(0, 70%, 20%)';
-  @Input('removeOnMatch') removeOnMatch: boolean = false;
 
   constructor(
     private gameService: GameService

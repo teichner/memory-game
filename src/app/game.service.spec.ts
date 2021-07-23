@@ -1,6 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
-// TODO: Define Card and CardPolicy ("canFaceUp" and "canFaceDown") interfaces
 import { GameService } from './game.service';
 import { GameState, CardState, Game } from './game';
 
@@ -47,20 +45,10 @@ describe('GameService', () => {
     expect(game.state).toBe(GameState.MISMATCH);
     expect(game.activeCards).toEqual([cards[2], cards[4]]);
 
-    // expect(() => {
-    //   cards[5].faceUp();
-    // }).toThrowError();
     cards[5].faceUp();
     expect(cards[5].state).toBe(CardState.FACE_DOWN);
 
-
-    // Expected to call card.faceDown()
-    //const card2spy = spyOn(cards[2], 'faceDown');
-    //const card4spy = spyOn(cards[4], 'faceDown');
     game.resetChoices();
-    //expect(card2spy).toHaveBeenCalled();
-    //expect(card4spy).toHaveBeenCalled();
-
 
     expect(game.state).toBe(GameState.SELECTING);
     expect(game.activeCards).toEqual([]);
@@ -105,7 +93,6 @@ describe('GameService', () => {
 
     cards[2].faceUp();
 
-    // expect(cards[0].canFaceDown()).toBeTrue();
     expect(cards[5].canFaceDown()).toBeFalse();
   });
 
