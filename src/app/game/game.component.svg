@@ -5,19 +5,6 @@
       <polygon [attr.points]="patternPolygonPoints" stroke="black" [attr.fill]="backFill" stroke-width="1" />
     </pattern>
   </defs>
-  <style>
-    rect.frame {
-    fill: gold;
-    }
-
-    .card-text {
-    font: 72px sans-serif;
-    }
-
-    .dashboard text {
-    font: 90px sans-serif;
-    }
-  </style>
   <g *ngFor="let row of rows; index as i" [attr.transform]="rowTransform(i)">
     <g *ngFor="let card of row; index as j" [attr.transform]="cellTransform(j)" (click)="onCardClick(card)">
       <ng-template [ngIf]="!isCardHidden(card)">

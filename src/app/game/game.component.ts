@@ -4,7 +4,8 @@ import { Game, Card, GameState, CardState } from '../game';
 
 @Component({
   selector: 'app-game',
-  templateUrl: './game.component.svg'
+  templateUrl: './game.component.svg',
+  styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
   #game: Game = this.gameService.initGame({
