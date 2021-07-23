@@ -14,6 +14,7 @@ export class GameComponent implements OnInit {
   });
 
   #hiddenCards: Set<Card>;
+  #hiddenCardTimer: any;
 
   // Game mechanics
   @Input('rowCount') rowCount: number = 4;
@@ -135,6 +136,9 @@ export class GameComponent implements OnInit {
   }
 
   onCardClick(card: Card): void {
+    if (!card.canFaceUp()) {
+      return;
+    }
     const state = this.#game.state;
     card.faceUp();
     if (state !== this.#game.state && this.#game.state === GameState.MISMATCH) {
@@ -142,7 +146,8 @@ export class GameComponent implements OnInit {
         this.#game.resetChoices();
       }, 500);
     } else if (this.removeOnMatch && !this.#game.activeCards.length) {
-      window.setTimeout(() => {
+      window.clearTimeout(this.#hiddenCardTimer);
+      this.#hiddenCardTimer = window.setTimeout(() => {
         for (let matched of this.#game.matchedCards) {
           this.#hiddenCards.add(matched);
         }
