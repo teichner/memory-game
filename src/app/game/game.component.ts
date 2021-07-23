@@ -22,6 +22,7 @@ export class GameComponent implements OnInit {
   @Input('cardSpacing') cardSpacing: number = 20;
   @Input('patternCount') patternCount: number = 10;
   @Input('backFill') backFill: string = 'hsl(0, 70%, 20%)';
+  @Input('removeOnMatch') removeOnMatch: boolean = false;
 
   constructor(
     private gameService: GameService
@@ -126,6 +127,10 @@ export class GameComponent implements OnInit {
       rows.push(row);
     }
     return rows;
+  }
+
+  isCardHidden(card: Card): boolean {
+    return this.removeOnMatch && this.#game.matchedCards.indexOf(card) >= 0;
   }
 
   faceUp(card: Card): boolean {
