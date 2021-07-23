@@ -21,6 +21,7 @@ export class GameComponent implements OnInit {
   @Input('circleBorder') circleBorder: number = 10;
   @Input('cardSpacing') cardSpacing: number = 20;
   @Input('patternCount') patternCount: number = 10;
+  @Input('backFill') backFill: string = 'hsl(0, 70%, 20%)';
 
   constructor(
     private gameService: GameService
@@ -94,8 +95,15 @@ export class GameComponent implements OnInit {
     return `hsl(${hue}, 70%, 50%)`
   }
 
-  bodyFill(card: Card): string {
-    return (card.state === CardState.FACE_UP) ? this.cardColor(card) : 'url(#diamond)';
+  get dashboardTransform(): string {
+    const y = (this.cardSpacing + this.cardSize) * this.rowCount;
+    return `translate(0, ${y})`;
+  }
+
+  get dashboardText(): string {
+    return (this.#game.state === GameState.VICTORY) ?
+      "Victory!" :
+      `Score: ${this.#game.matchedCards.length}`;
   }
 
   // //TEST
@@ -131,7 +139,7 @@ export class GameComponent implements OnInit {
     if (state !== this.#game.state && this.#game.state === GameState.MISMATCH) {
       window.setTimeout(() => {
         this.#game.resetChoices();
-      }, 1000);
+      }, 500);
     }
   }
 
