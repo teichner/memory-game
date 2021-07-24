@@ -9,7 +9,7 @@
     <g *ngFor="let card of row; index as j" [attr.transform]="cellTransform(j)" (click)="onCardClick(card)">
       <ng-template [ngIf]="!isCardHidden(card)">
         <rect class="frame" x="0" y="0" [attr.width]="cardSize" [attr.height]="cardSize" rx="5" ry="5"></rect>
-        <g *ngIf="faceUp(card); else faceDown">
+        <g *ngIf="isFaceUp(card); else faceDown">
           <rect class="body" [attr.x]="frameOffset" [attr.y]="frameOffset" [attr.width]="frameSize" [attr.height]="frameSize" [attr.fill]="cardColor(card)" rx="5" ry="5"></rect>
           <circle [attr.cx]="circleX" [attr.cy]="circleY" [attr.r]="circleRadius" fill="white"></circle>
           <text class="card-text" [attr.x]="circleX" [attr.y]="circleY" [attr.fill]="cardColor(card)" text-anchor="middle" dominant-baseline="central">{{ card.value }}</text>

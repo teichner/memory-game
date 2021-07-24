@@ -16,13 +16,26 @@ export class GameComponent implements OnInit {
   #hiddenCards: Set<Card>;
   #hiddenCardTimer: any;
 
-  // Game mechanics
+  /*
+   * Together, the row and column counts determine the
+   *  number of cards used in the game model.
+   */
   @Input('rowCount') rowCount: number = 4;
   @Input('columnCount') columnCount: number = 6;
+
+  /*
+   * The number of cards that must match in succession
+   *  to form a group.
+   */
   @Input('matchSize') matchSize: number = 2;
+
+  /*
+   * If set to true, cards disappear shortly after forming
+   *  matched groups.
+   */
   @Input('removeOnMatch') removeOnMatch: boolean = false;
 
-  // Presentation
+  // Presentation values
   @Input('cardSize') cardSize: number = 150;
   @Input('frameBorder') frameBorder: number = 5;
   @Input('circleBorder') circleBorder: number = 10;
@@ -96,6 +109,9 @@ export class GameComponent implements OnInit {
     return points.map((point) => point.join(',')).join(' ');
   }
 
+  /*
+   * Card colors are scattered across the spectrum of hues.
+   */
   cardColor(card: Card): string {
     const highestValue = this.#game.cards.length / this.matchSize;
     const hue = 360 * (card.value / highestValue);
@@ -113,6 +129,9 @@ export class GameComponent implements OnInit {
       `Score: ${this.#game.matchedCards.length}`;
   }
 
+  /*
+   * Cards are organized into a table for presentation.
+   */
   get rows(): Card[][] {
     const rows = [];
     const cards = this.#game.cards;
@@ -127,14 +146,26 @@ export class GameComponent implements OnInit {
     return rows;
   }
 
+  /*
+   * A card must specifically be marked to be hidden, and only
+   *  if "removeOnMatch" is set (see "onCardClick").
+   */
   isCardHidden(card: Card): boolean {
     return this.removeOnMatch && this.#hiddenCards.has(card);
   }
 
-  faceUp(card: Card): boolean {
+  isFaceUp(card: Card): boolean {
     return card.state === CardState.FACE_UP;
   }
 
+  /*
+   * This method handles all state transitions and timed events. If possible,
+   * it turns a card face up, then checks the results. If there is now a
+   * mismatch, a timer is spawned to reset all active choices, giving the
+   * player a moment to look at the cards. If a full match is now completed,
+   * a timer is spawned to hide all matched cards (resetting if yet another
+   * group is matched before time elapses).
+   */
   onCardClick(card: Card): void {
     if (!card.canFaceUp()) {
       return;
