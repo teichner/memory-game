@@ -115,7 +115,7 @@ export class GameComponent implements OnInit {
   cardColor(card: Card): string {
     const highestValue = this.#game.cards.length / this.matchSize;
     const hue = 360 * (card.value / highestValue);
-    return `hsl(${hue}, 70%, 50%)`
+    return `hsl(${hue}, 50%, 50%)`
   }
 
   get dashboardTransform(): string {
