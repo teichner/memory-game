@@ -18,20 +18,29 @@
         <feComposite in="new-image" in2="SourceGraphic" operator="in" />
     </filter>
     <g *ngFor="let row of rows; index as i" [attr.transform]="rowTransform(i)">
-        <g *ngFor="let card of row; index as j" [attr.transform]="cellTransform(j)" (click)="onCardClick(card)" filter="url(#card-lighting)" >
-            <ng-template [ngIf]="!isCardHidden(card)">
-                <rect class="frame" x="0" y="0" [attr.width]="cardSize" [attr.height]="cardSize" rx="5" ry="5"></rect>
-                <g *ngIf="isFaceUp(card); else faceDown">
-                    <rect class="body" [attr.x]="frameOffset" [attr.y]="frameOffset" [attr.width]="frameSize" [attr.height]="frameSize" [attr.fill]="cardColor(card)" rx="5" ry="5"></rect>
-                    <circle [attr.cx]="circleX" [attr.cy]="circleY" [attr.r]="circleRadius" fill="white"></circle>
-                    <text class="card-text" [attr.x]="circleX" [attr.y]="circleY" [attr.fill]="cardColor(card)" text-anchor="middle" dominant-baseline="central">{{ card.value }}</text>
-                </g>
-                <ng-template #faceDown>
-                    <g >
-                        <rect class="body" [attr.x]="frameOffset" [attr.y]="frameOffset" [attr.width]="frameSize" [attr.height]="frameSize" fill="url(#card-pattern)" rx="5" ry="5"></rect>
+        <g *ngFor="let card of row; index as j" [attr.transform]="cellTransform(j)" filter="url(#card-lighting)">
+            <g *ngIf="!isCardHidden(card)" (click)="onCardClick(card)">
+                <g class="front" [style]="{transform: 'translate(' + (cardSize / 2) + 'px, 0)'}">
+                    <g style="display: block" [@cardFaceState]="isFaceUp(card)">
+                        <g [attr.transform]="'translate(' + (-cardSize / 2) + ', 0)'">
+                            <rect class="frame" x="0" y="0" [attr.width]="cardSize" [attr.height]="cardSize" rx="5" ry="5"></rect>
+                            <rect class="body" [attr.x]="frameOffset" [attr.y]="frameOffset" [attr.width]="frameSize" [attr.height]="frameSize" [attr.fill]="cardColor(card)" rx="5" ry="5"></rect>
+                            <circle [attr.cx]="circleX" [attr.cy]="circleY" [attr.r]="circleRadius" fill="white"></circle>
+                            <text class="card-text" [attr.x]="circleX" [attr.y]="circleY" [attr.fill]="cardColor(card)" text-anchor="middle" dominant-baseline="central">{{ card.value }}</text>
+                        </g>
                     </g>
-                </ng-template>
-            </ng-template>
+                </g>
+                <g class="back" [style]="{transform: 'translate(' + (cardSize / 2) + 'px, 0)'}">
+                    <g style="display: block" [@cardFaceState]="!isFaceUp(card)">
+                        <g [attr.transform]="'translate(' + (-cardSize / 2) + ', 0)'">
+
+                            <rect class="frame" x="0" y="0" [attr.width]="cardSize" [attr.height]="cardSize" rx="5" ry="5"></rect>
+                            <rect class="body" [attr.x]="frameOffset" [attr.y]="frameOffset" [attr.width]="frameSize" [attr.height]="frameSize" fill="url(#card-pattern)" rx="5" ry="5"></rect>
+
+                        </g>
+                    </g>
+                </g>
+            </g>
         </g>
     </g>
     <g class="dashboard" [attr.transform]="dashboardTransform">

@@ -1,11 +1,36 @@
 import { Input, Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
 import { Game, Card, GameState, CardState } from '../game';
+import { trigger, state, transition, style, animate, stagger, query } from '@angular/animations';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.svg',
-  styleUrls: ['./game.component.scss']
+  styleUrls: ['./game.component.scss'],
+  animations: [
+    trigger('cardFaceState', [
+      state('true', style({
+        opacity: 1
+      })),
+      state('false', style({
+        opacity: 0
+      })),
+      transition('true <=> false', animate(5000)),
+      // transition(':enter', [
+      //   style({
+      //     transform: 'rotate3d(0, 1, 0, 45deg)'
+      //   }),
+      //   animate('150ms 150ms', style({
+      //     transform: 'rotate3d(0, 1, 0, 0deg)'
+      //   }))
+      // ]),
+      // transition(':leave', [
+      //   animate('150ms', style({
+      //     transform: 'rotate3d(0, 1, 0, 45deg)'
+      //   }))
+      // ])
+    ])
+  ]
 })
 export class GameComponent implements OnInit {
   #game: Game = this.gameService.initGame({
@@ -47,6 +72,10 @@ export class GameComponent implements OnInit {
     private gameService: GameService
   ) {
     this.#hiddenCards = new Set<Card>();
+  }
+
+  onCardFaceEvent(event: any) {
+    console.log('card face event', event);
   }
 
   ngOnInit(): void {
