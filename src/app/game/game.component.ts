@@ -7,30 +7,30 @@ import { trigger, state, transition, style, animate, stagger, query } from '@ang
   selector: 'app-game',
   templateUrl: './game.component.svg',
   styleUrls: ['./game.component.scss'],
-  animations: [
-    trigger('cardFaceState', [
-      state('true', style({
-        opacity: 1
-      })),
-      state('false', style({
-        opacity: 0
-      })),
-      transition('true <=> false', animate(5000)),
-      // transition(':enter', [
-      //   style({
-      //     transform: 'rotate3d(0, 1, 0, 45deg)'
-      //   }),
-      //   animate('150ms 150ms', style({
-      //     transform: 'rotate3d(0, 1, 0, 0deg)'
-      //   }))
-      // ]),
-      // transition(':leave', [
-      //   animate('150ms', style({
-      //     transform: 'rotate3d(0, 1, 0, 45deg)'
-      //   }))
-      // ])
-    ])
-  ]
+  // animations: [
+  //   trigger('cardFaceState', [
+  //     state('true', style({
+  //       opacity: 1
+  //     })),
+  //     state('false', style({
+  //       opacity: 0
+  //     })),
+  //     transition('true <=> false', animate(5000)),
+  //     // transition(':enter', [
+  //     //   style({
+  //     //     transform: 'rotate3d(0, 1, 0, 45deg)'
+  //     //   }),
+  //     //   animate('150ms 150ms', style({
+  //     //     transform: 'rotate3d(0, 1, 0, 0deg)'
+  //     //   }))
+  //     // ]),
+  //     // transition(':leave', [
+  //     //   animate('150ms', style({
+  //     //     transform: 'rotate3d(0, 1, 0, 45deg)'
+  //     //   }))
+  //     // ])
+  //   ])
+  // ]
 })
 export class GameComponent implements OnInit {
   #game: Game = this.gameService.initGame({
@@ -74,15 +74,20 @@ export class GameComponent implements OnInit {
     this.#hiddenCards = new Set<Card>();
   }
 
-  onCardFaceEvent(event: any) {
-    console.log('card face event', event);
-  }
-
   ngOnInit(): void {
     this.#game = this.gameService.initGame({
       cardCount: this.rowCount * this.columnCount,
       matchSize: this.matchSize
     });
+    this.gameService.getStateChanges().subscribe(this.onCardChange.bind(this));
+  }
+
+  onCardChange(card: Card) {
+
+  }
+
+  onCardSelect(card: Card) {
+
   }
 
   rowTransform(index: number): string {
@@ -91,18 +96,6 @@ export class GameComponent implements OnInit {
 
   cellTransform(index: number): string {
     return `translate(${index * (this.cardSpacing + this.cardSize)}, 0)`;
-  }
-
-  get circleX(): number {
-    return this.cardSize / 2;
-  }
-
-  get circleY(): number {
-    return this.cardSize / 2;
-  }
-
-  get circleRadius(): number {
-    return (this.cardSize / 2) - this.frameBorder - this.circleBorder;
   }
 
   get frameOffset(): number {

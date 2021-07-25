@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g class="card" (click)="selected.emit($event)" [attr.transform]="'translate(' + (cardSize / 2) + ', 0)'" filter="url(#card-lighting)">
+        <g class="rotate-anchor">
+            <g [attr.transform]="'translate(' + (-cardSize / 2) + ', 0)'">
+                <g class="front" [style]="{transform: 'translate(' + (cardSize / 2) + 'px, 0)'}">
+                    <g [style]="{transform: 'rotate3d(0, 1, 0, 180deg)'}">
+                        <g [attr.transform]="'translate(' + (-cardSize / 2) + ', 0)'">
+                            <rect class="frame" x="0" y="0" [attr.width]="cardSize" [attr.height]="cardSize" rx="5" ry="5"></rect>
+                            <rect class="body" [attr.x]="frameOffset" [attr.y]="frameOffset" [attr.width]="frameSize" [attr.height]="frameSize" [attr.fill]="color" rx="5" ry="5"></rect>
+                            <circle [attr.cx]="circleX" [attr.cy]="circleY" [attr.r]="circleRadius" fill="white"></circle>
+                            <text class="card-text" [attr.x]="circleX" [attr.y]="circleY" [attr.fill]="color" text-anchor="middle" dominant-baseline="central">{{ value }}</text>
+                        </g>
+                    </g>
+                </g>
+                <g class="back">
+                    <rect class="frame" x="0" y="0" [attr.width]="cardSize" [attr.height]="cardSize" rx="5" ry="5"></rect>
+                    <rect class="body" [attr.x]="frameOffset" [attr.y]="frameOffset" [attr.width]="frameSize" [attr.height]="frameSize" fill="url(#card-pattern)" rx="5" ry="5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

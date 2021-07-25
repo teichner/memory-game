@@ -1,3 +1,5 @@
+@use "sass:math";
+
 rect.frame {
     fill: gold;
 }
@@ -8,4 +10,76 @@ rect.frame {
 
 .dashboard text {
     font: 90px sans-serif;
+}
+
+@keyframes flippedUp {
+    from {
+        transform: rotate3d(0, 1, 0, 0deg);
+    }
+
+    to {
+        transform: rotate3d(0, 1, 0, 180deg);
+    }
+}
+
+@keyframes hideFace {
+    from {
+        visibility: visible;
+    }
+
+    to {
+        visibility: hidden;
+    }
+}
+
+@keyframes showFace {
+    from {
+        visibility: hidden;
+    }
+
+    to {
+        visibility: visible;
+    }
+}
+
+$duration: 1000ms;
+
+.flippedUp.card {
+    transform: rotate3d(0, 1, 0, 180deg);
+    animation-name: flippedUp;
+    animation-duration: $duration;
+    animation-timing-function: linear;
+
+    .front {
+        animation-name: showFace;
+        animation-duration: math.div($duration, 2);
+        visibility: visible;
+    }
+
+    .back {
+        animation-name: showFace;
+        animation-direction: reverse;
+        animation-duration: math.div($duration, 2);
+        visibility: hidden;
+    }
+}
+
+.flippedDown.card {
+    animation-name: flippedUp;
+    animation-duration: $duration;
+    animation-timing-function: linear;
+    animation-direction: reverse;
+
+    .front {
+        animation-name: showFace;
+        animation-duration: math.div($duration, 2);
+        animation-direction: reverse;
+        visibility: hidden;
+    }
+
+    .back {
+        animation-name: showFace;
+        animation-duration: math.div($duration, 2);
+        visibility: visible;
+    }
 }

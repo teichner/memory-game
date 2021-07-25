@@ -137,7 +137,8 @@ export class Game implements CardPolicy {
          *  of card count and number of cards per matched group.
          */
         private cardCount: number,
-        private matchSize: number
+        private matchSize: number,
+        private onStateChange?: (card: Card) => void
     ) {
         if (matchSize && cardCount % matchSize !== 0) {
             throw new Error("The card count must be a multiple of the match size");
@@ -216,14 +217,19 @@ export class Game implements CardPolicy {
         if (this.state !== GameState.MISMATCH && this.#activeCards.length === this.matchSize) {
             this.#activeCards = [];
         }
+        if (this.onStateChange) {
+            this.onStateChange.call(null, card);
+        }
     }
 
     /*
      * This callback does no management of the active array, because under this policy all cards
      *  are reset at once.
      */
-    onFaceDown(__: Card): void {
-
+    onFaceDown(card: Card): void {
+        if (this.onStateChange) {
+            this.onStateChange.call(null, card);
+        }
     }
 
     /*

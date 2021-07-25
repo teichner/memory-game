@@ -1,0 +1,17 @@
+  // // Presentation values
+  // @Input('cardSize') cardSize: number = 150;
+  // @Input('frameBorder') frameBorder: number = 5;
+  // @Input('circleBorder') circleBorder: number = 10;
+  // @Input('cardSpacing') cardSpacing: number = 20;
+  // @Input('patternCount') patternCount: number = 10;
+  // @Input('backFill') backFill: string = 'hsl(0, 70%, 20%)';
+
+@use "sass:math";
+
+$card-size: 150px;
+$frame-border: 5px;
+$circle-border: 10px;
+
+.card {
+    // transform: translate(math.div($card-size, 2), 0);
+}

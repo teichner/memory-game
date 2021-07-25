@@ -1,22 +1,31 @@
 import { Injectable } from '@angular/core';
 
-import { Game } from './game';
+import { Game, Card } from './game';
+import { Observable, Subject, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  private game: Game | undefined;
+  #game: Game | undefined;
+  #stateChange: Subject<Card> = new Subject<Card>();
 
   constructor() { }
 
   initGame(args: any): Game {
     let { cardCount, matchSize } = args;
-    this.game = new Game(cardCount, matchSize);
-    return this.game;
+    this.#stateChange = new Subject<Card>();
+    this.#game = new Game(cardCount, matchSize, (card: Card) => {
+      this.#stateChange.next(card);
+    });
+    return this.#game;
   }
 
   getGame(): Game | undefined {
-    return this.game;
+    return this.#game;
+  }
+
+  getStateChanges(): Observable<Card> {
+    return this.#stateChange.asObservable();
   }
 }
