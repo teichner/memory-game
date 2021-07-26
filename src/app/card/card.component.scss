@@ -6,6 +6,8 @@ $frame-border: 5px;
 $circle-border: 10px;
 $duration: 150ms;
 
+// It seems that two sets of keyframes are needed to toggle animations. The same keyframe
+//  cannot be used again without removing the selector and restoring it on a later tick.
 @keyframes flipUp {
     from {
         transform: rotate3d(0, 1, 0, 0deg);
@@ -28,21 +30,37 @@ $duration: 150ms;
 
 @keyframes showUp {
     from {
-        visibility: hidden;
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    51% {
+        opacity: 1;
     }
 
     to {
-        visibility: visible;
+        opacity: 1;
     }
 }
 
 @keyframes showDown {
     from {
-        visibility: visible;
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    51% {
+        opacity: 0;
     }
 
     to {
-        visibility: hidden;
+        opacity: 0;
     }
 }
 
@@ -53,16 +71,18 @@ $duration: 150ms;
     animation-timing-function: linear;
 
     .front {
-        visibility: visible;
+        opacity: 1;
         animation-name: showUp;
-        animation-duration: math.div($duration, 2);
+        animation-duration: $duration;
+        animation-timing-function: linear;
     }
 
     .back {
-        visibility: hidden;
+        opacity: 0;
         animation-name: showUp;
         animation-direction: reverse;
-        animation-duration: math.div($duration, 2);
+        animation-duration: $duration;
+        animation-timing-function: linear;
     }
 }
 
@@ -73,16 +93,18 @@ $duration: 150ms;
     animation-timing-function: linear;
 
     .front {
-        visibility: hidden;
+        opacity: 0;
         animation-name: showDown;
-        animation-duration: math.div($duration, 2);
+        animation-duration: $duration;
+        animation-timing-function: linear;
     }
 
     .back {
-        visibility: visible;
+        opacity: 1;
         animation-name: showDown;
         animation-direction: reverse;
-        animation-duration: math.div($duration, 2);
+        animation-duration: $duration;
+        animation-timing-function: linear;
     }
 }
 
