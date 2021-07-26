@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-    <g class="card" (click)="selected.emit($event)" [attr.transform]="'translate(' + (cardSize / 2) + ', 0)'" filter="url(#card-lighting)">
-        <g class="rotate-anchor">
+    <g class="card" (click)="onSelect($event)" [attr.transform]="'translate(' + (cardSize / 2) + ', 0)'" filter="url(#card-lighting)">
+        <g [class]="rotateAnchorClasses">
             <g [attr.transform]="'translate(' + (-cardSize / 2) + ', 0)'">
                 <g class="front" [style]="{transform: 'translate(' + (cardSize / 2) + 'px, 0)'}">
                     <g [style]="{transform: 'rotate3d(0, 1, 0, 180deg)'}">

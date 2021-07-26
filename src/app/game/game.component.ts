@@ -38,6 +38,8 @@ export class GameComponent implements OnInit {
     matchSize: 0
   });
 
+  #rows: Card[][] = [];
+
   #hiddenCards: Set<Card>;
   #hiddenCardTimer: any;
 
@@ -79,16 +81,64 @@ export class GameComponent implements OnInit {
       cardCount: this.rowCount * this.columnCount,
       matchSize: this.matchSize
     });
-    this.gameService.getStateChanges().subscribe(this.onCardChange.bind(this));
+    this.initRows();
+    this.gameService.getCardChanges()
+      .subscribe(this.onCardChange.bind(this));
+    this.gameService.getStateChanges()
+      .subscribe(this.onStateChange.bind(this));
   }
 
   onCardChange(card: Card) {
+    // If the last card picked gave us a complete match
+    if (this.removeOnMatch && this.isFaceUp(card) && !this.#game.activeCards.length) {
+      window.clearTimeout(this.#hiddenCardTimer);
+      this.#hiddenCardTimer = window.setTimeout(() => {
+        for (let matched of this.#game.matchedCards) {
+          this.#hiddenCards.add(matched);
+        }
+      }, 500);
+    }
+  }
 
+  onStateChange(state: GameState) {
+    if (state === GameState.MISMATCH) {
+      window.setTimeout(() => {
+        this.#game.resetChoices();
+      }, 500);
+    }
   }
 
   onCardSelect(card: Card) {
-
+    card.faceUp();
   }
+
+  /*
+   * This method handles all state transitions and timed events. If possible,
+   * it turns a card face up, then checks the results. If there is now a
+   * mismatch, a timer is spawned to reset all active choices, giving the
+   * player a moment to look at the cards. If a full match is now completed,
+   * a timer is spawned to hide all matched cards (resetting if yet another
+   * group is matched before time elapses).
+   */
+  // onCardClick(card: Card): void {
+  //   if (!card.canFaceUp()) {
+  //     return;
+  //   }
+  //   const state = this.#game.state;
+  //   card.faceUp();
+  //   if (state !== this.#game.state && this.#game.state === GameState.MISMATCH) {
+  //     window.setTimeout(() => {
+  //       this.#game.resetChoices();
+  //     }, 500);
+  //   } else if (this.removeOnMatch && !this.#game.activeCards.length) {
+  //     window.clearTimeout(this.#hiddenCardTimer);
+  //     this.#hiddenCardTimer = window.setTimeout(() => {
+  //       for (let matched of this.#game.matchedCards) {
+  //         this.#hiddenCards.add(matched);
+  //       }
+  //     }, 500);
+  //   }
+  // }
 
   rowTransform(index: number): string {
     return `translate(0, ${index * (this.cardSpacing + this.cardSize)})`;
@@ -154,8 +204,7 @@ export class GameComponent implements OnInit {
   /*
    * Cards are organized into a table for presentation.
    */
-  get rows(): Card[][] {
-    const rows = [];
+  initRows() {
     const cards = this.#game.cards;
     let row;
     for (let i = 0; i < this.rowCount; i++) {
@@ -163,9 +212,12 @@ export class GameComponent implements OnInit {
       for (let j = 0; j < this.columnCount; j++) {
         row.push(cards[i * this.columnCount + j]);
       }
-      rows.push(row);
+      this.#rows.push(row);
     }
-    return rows;
+  }
+
+  get rows() {
+    return this.#rows;
   }
 
   /*
@@ -178,33 +230,5 @@ export class GameComponent implements OnInit {
 
   isFaceUp(card: Card): boolean {
     return card.state === CardState.FACE_UP;
-  }
-
-  /*
-   * This method handles all state transitions and timed events. If possible,
-   * it turns a card face up, then checks the results. If there is now a
-   * mismatch, a timer is spawned to reset all active choices, giving the
-   * player a moment to look at the cards. If a full match is now completed,
-   * a timer is spawned to hide all matched cards (resetting if yet another
-   * group is matched before time elapses).
-   */
-  onCardClick(card: Card): void {
-    if (!card.canFaceUp()) {
-      return;
-    }
-    const state = this.#game.state;
-    card.faceUp();
-    if (state !== this.#game.state && this.#game.state === GameState.MISMATCH) {
-      window.setTimeout(() => {
-        this.#game.resetChoices();
-      }, 500);
-    } else if (this.removeOnMatch && !this.#game.activeCards.length) {
-      window.clearTimeout(this.#hiddenCardTimer);
-      this.#hiddenCardTimer = window.setTimeout(() => {
-        for (let matched of this.#game.matchedCards) {
-          this.#hiddenCards.add(matched);
-        }
-      }, 500);
-    }
   }
 }

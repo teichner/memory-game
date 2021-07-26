@@ -11,7 +11,97 @@
 $card-size: 150px;
 $frame-border: 5px;
 $circle-border: 10px;
+$duration: 150ms;
 
 .card {
     // transform: translate(math.div($card-size, 2), 0);
+}
+
+
+@keyframes flipUp {
+    from {
+        transform: rotate3d(0, 1, 0, 0deg);
+    }
+
+    to {
+        transform: rotate3d(0, 1, 0, 180deg);
+    }
+}
+
+@keyframes flipDown {
+    from {
+        transform: rotate3d(0, 1, 0, 180deg);
+    }
+
+    to {
+        transform: rotate3d(0, 1, 0, 0deg);
+    }
+}
+
+@keyframes showUp {
+    from {
+        visibility: hidden;
+    }
+
+    to {
+        visibility: visible;
+    }
+}
+
+@keyframes showDown {
+    from {
+        visibility: visible;
+    }
+
+    to {
+        visibility: hidden;
+    }
+}
+
+.flipped-up {
+    transform: rotate3d(0, 1, 0, 180deg);
+    animation-name: flipUp;
+    animation-duration: $duration;
+    animation-timing-function: linear;
+
+    .front {
+        visibility: visible;
+        animation-name: showUp;
+        animation-duration: math.div($duration, 2);
+    }
+
+    .back {
+        visibility: hidden;
+        animation-name: showUp;
+        animation-direction: reverse;
+        animation-duration: math.div($duration, 2);
+    }
+}
+
+.flipped-down {
+    transform: rotate3d(0, 1, 0, 0deg);
+    animation-name: flipDown;
+    animation-duration: $duration;
+    animation-timing-function: linear;
+
+    .front {
+        visibility: hidden;
+        animation-name: showDown;
+        animation-duration: math.div($duration, 2);
+    }
+
+    .back {
+        visibility: visible;
+        animation-name: showDown;
+        animation-direction: reverse;
+        animation-duration: math.div($duration, 2);
+    }
+}
+
+rect.frame {
+    fill: gold;
+}
+
+.card-text {
+    font: 72px sans-serif;
 }

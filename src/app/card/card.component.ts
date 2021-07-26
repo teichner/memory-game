@@ -1,14 +1,26 @@
-import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  // ElementRef,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy
+} from '@angular/core';
 
 @Component({
   selector: '[card]',
   templateUrl: './card.component.svg',
-  styleUrls: ['./card.component.scss']
+  styleUrls: ['./card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnChanges {
+  #hasChanged: boolean = false;
 
   constructor(
-    private elementRef: ElementRef
+    // private elementRef: ElementRef
   ) { }
 
   // TEMPORARY
@@ -31,7 +43,19 @@ export class CardComponent implements OnInit {
 
   // END TEMPORARY
 
-  ngOnInit(): void {
+  get rotateAnchorClasses(): any {
+    return {
+      'rotate-anchor': true,
+      'flipped-up': this.#hasChanged && this.isFaceUp,
+      'flipped-down': this.#hasChanged && !this.isFaceUp
+    };
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const { previousValue, currentValue } = changes.isFaceUp;
+    if (!!previousValue !== currentValue) {
+      this.#hasChanged = true;
+    }
   }
 
   get circleX(): number {
@@ -46,5 +70,7 @@ export class CardComponent implements OnInit {
     return (this.cardSize / 2) - this.frameBorder - this.circleBorder;
   }
 
-
+  onSelect(event: any) {
+    this.selected.emit(event);
+  }
 }

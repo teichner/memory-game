@@ -1,22 +1,25 @@
 import { Injectable } from '@angular/core';
 
-import { Game, Card } from './game';
+import { Game, GameState, Card } from './game';
 import { Observable, Subject, of } from 'rxjs';
+import {  map, distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  #game: Game | undefined;
-  #stateChange: Subject<Card> = new Subject<Card>();
+  #game: Game;
+  #cardChanges: Subject<Card> = new Subject<Card>();
 
-  constructor() { }
+  constructor() {
+    this.#game = new Game(0, 0);
+  }
 
   initGame(args: any): Game {
     let { cardCount, matchSize } = args;
-    this.#stateChange = new Subject<Card>();
+    this.#cardChanges = new Subject<Card>();
     this.#game = new Game(cardCount, matchSize, (card: Card) => {
-      this.#stateChange.next(card);
+      this.#cardChanges.next(card);
     });
     return this.#game;
   }
@@ -25,7 +28,17 @@ export class GameService {
     return this.#game;
   }
 
-  getStateChanges(): Observable<Card> {
-    return this.#stateChange.asObservable();
+  getCardChanges(): Observable<Card> {
+    return this.#cardChanges.asObservable();
+  }
+
+  getStateChanges(): Observable<GameState> {
+    return this.getCardChanges().pipe(
+      map(() => this.#game.state),
+      distinctUntilChanged()
+      // bufferCount(2),
+      // filter(([state1, state2]) => state1 !== state2),
+      // map(([__, state2]) => state2)
+    );
   }
 }
