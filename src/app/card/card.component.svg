@@ -1,8 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg">
+    <!-- Nested groups are used both for the front face and the card as whole to enable natural rotation
+     around the middle axis. -->
     <g class="card" (click)="onSelect($event)" [attr.transform]="'translate(' + (cardSize / 2) + ', 0)'" filter="url(#card-lighting)">
         <g [class]="rotateAnchorClasses">
             <g [attr.transform]="'translate(' + (-cardSize / 2) + ', 0)'">
-                <g class="front" [style]="{transform: 'translate(' + (cardSize / 2) + 'px, 0)'}">
+                <g class="front" [attr.transform]="'translate(' + (cardSize / 2) + ', 0)'">
                     <g [style]="{transform: 'rotate3d(0, 1, 0, 180deg)'}">
                         <g [attr.transform]="'translate(' + (-cardSize / 2) + ', 0)'">
                             <rect class="frame" x="0" y="0" [attr.width]="cardSize" [attr.height]="cardSize" rx="5" ry="5"></rect>

@@ -4,10 +4,11 @@
 $card-size: 150px;
 $frame-border: 5px;
 $circle-border: 10px;
+
 $duration: 150ms;
 
-// It seems that two sets of keyframes are needed to toggle animations. The same keyframe
-//  cannot be used again without removing the selector and restoring it on a later tick.
+// Using two sets of keyframes is one way to toggle animations without removing
+//  the selector and restoring it in a later tick.
 @keyframes flipUp {
     from {
         transform: rotate3d(0, 1, 0, 0deg);

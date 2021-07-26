@@ -82,7 +82,8 @@ export class GameComponent implements OnInit {
   }
 
   /*
-   * Clear the player's choices a few moments after mismatch.
+   * Clear the player's choices a few moments after mismatch, or triggers an
+   *  animation upon victory.
    */
   onStateChange(state: GameState) {
     if (state === GameState.MISMATCH) {
