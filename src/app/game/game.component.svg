@@ -6,14 +6,9 @@
         </pattern>
     </defs>
     <filter id="card-lighting">
-        <!-- <feSpecularLighting result="light" specularExponent="25" lighting-color="white">
-             <fePointLight x="-5" y="-5" z="30"></fePointLight>
-             </feSpecularLighting> -->
         <feDiffuseLighting result="light" lighting-color="white">
-            <!-- <feDistantLight azimuth="30" elevation="100" /> -->
             <fePointLight x="20" y="0" z="120" />
         </feDiffuseLighting>
-        <!-- <feComposite in="SourceGraphic" in2="light" result="new-image" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" ></feComposite> -->
         <feComposite in="SourceGraphic" in2="light" result="new-image" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" ></feComposite>
         <feComposite in="new-image" in2="SourceGraphic" operator="in" />
     </filter>

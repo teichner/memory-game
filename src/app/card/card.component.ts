@@ -3,8 +3,7 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
-  // ElementRef,
-  Input,
+    Input,
   Output,
   EventEmitter,
   ChangeDetectionStrategy
@@ -19,9 +18,7 @@ import {
 export class CardComponent implements OnChanges {
   #hasChanged: boolean = false;
 
-  constructor(
-    // private elementRef: ElementRef
-  ) { }
+  constructor() { }
 
   // TEMPORARY
   @Input('cardSize') cardSize: number = 150;
@@ -40,7 +37,6 @@ export class CardComponent implements OnChanges {
   get frameSize(): number {
     return this.cardSize - (2 * this.frameBorder);
   }
-
   // END TEMPORARY
 
   get rotateAnchorClasses(): any {

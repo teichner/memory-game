@@ -6,31 +6,7 @@ import { trigger, state, transition, style, animate, stagger, query } from '@ang
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.svg',
-  styleUrls: ['./game.component.scss'],
-  // animations: [
-  //   trigger('cardFaceState', [
-  //     state('true', style({
-  //       opacity: 1
-  //     })),
-  //     state('false', style({
-  //       opacity: 0
-  //     })),
-  //     transition('true <=> false', animate(5000)),
-  //     // transition(':enter', [
-  //     //   style({
-  //     //     transform: 'rotate3d(0, 1, 0, 45deg)'
-  //     //   }),
-  //     //   animate('150ms 150ms', style({
-  //     //     transform: 'rotate3d(0, 1, 0, 0deg)'
-  //     //   }))
-  //     // ]),
-  //     // transition(':leave', [
-  //     //   animate('150ms', style({
-  //     //     transform: 'rotate3d(0, 1, 0, 45deg)'
-  //     //   }))
-  //     // ])
-  //   ])
-  // ]
+  styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
   #game: Game = this.gameService.initGame({
@@ -88,8 +64,11 @@ export class GameComponent implements OnInit {
       .subscribe(this.onStateChange.bind(this));
   }
 
+  /*
+   * If the last card picked gave us a complete match, set a timer to clear
+   *  all matched cards (resetting the timer if yet another group is matched).
+   */
   onCardChange(card: Card) {
-    // If the last card picked gave us a complete match
     if (this.removeOnMatch && this.isFaceUp(card) && !this.#game.activeCards.length) {
       window.clearTimeout(this.#hiddenCardTimer);
       this.#hiddenCardTimer = window.setTimeout(() => {
@@ -100,6 +79,9 @@ export class GameComponent implements OnInit {
     }
   }
 
+  /*
+   * Clear the player's choices a few moments after mismatch.
+   */
   onStateChange(state: GameState) {
     if (state === GameState.MISMATCH) {
       window.setTimeout(() => {
@@ -111,34 +93,6 @@ export class GameComponent implements OnInit {
   onCardSelect(card: Card) {
     card.faceUp();
   }
-
-  /*
-   * This method handles all state transitions and timed events. If possible,
-   * it turns a card face up, then checks the results. If there is now a
-   * mismatch, a timer is spawned to reset all active choices, giving the
-   * player a moment to look at the cards. If a full match is now completed,
-   * a timer is spawned to hide all matched cards (resetting if yet another
-   * group is matched before time elapses).
-   */
-  // onCardClick(card: Card): void {
-  //   if (!card.canFaceUp()) {
-  //     return;
-  //   }
-  //   const state = this.#game.state;
-  //   card.faceUp();
-  //   if (state !== this.#game.state && this.#game.state === GameState.MISMATCH) {
-  //     window.setTimeout(() => {
-  //       this.#game.resetChoices();
-  //     }, 500);
-  //   } else if (this.removeOnMatch && !this.#game.activeCards.length) {
-  //     window.clearTimeout(this.#hiddenCardTimer);
-  //     this.#hiddenCardTimer = window.setTimeout(() => {
-  //       for (let matched of this.#game.matchedCards) {
-  //         this.#hiddenCards.add(matched);
-  //       }
-  //     }, 500);
-  //   }
-  // }
 
   rowTransform(index: number): string {
     return `translate(0, ${index * (this.cardSpacing + this.cardSize)})`;
