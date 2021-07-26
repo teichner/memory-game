@@ -1,4 +1,4 @@
-import { Input, Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameService } from '../game.service';
 import { Game, Card, GameState, CardState } from '../game';
 import { trigger, state, transition, style, animate, stagger, query } from '@angular/animations';
@@ -46,6 +46,8 @@ export class GameComponent implements OnInit {
   @Input('patternCount') patternCount: number = 10;
   @Input('backFill') backFill: string = 'hsl(0, 70%, 20%)';
 
+  @ViewChild('victoryAnimation', { read: ElementRef }) victoryAnimation?: ElementRef;
+
   constructor(
     private gameService: GameService
   ) {
@@ -87,6 +89,8 @@ export class GameComponent implements OnInit {
       window.setTimeout(() => {
         this.#game.resetChoices();
       }, 500);
+    } else if (state === GameState.VICTORY) {
+      this.victoryAnimation?.nativeElement.beginElement();
     }
   }
 
@@ -144,8 +148,19 @@ export class GameComponent implements OnInit {
     return `hsl(${hue}, 50%, 50%)`
   }
 
+  get dashboardPosition(): number {
+    return (this.cardSpacing + this.cardSize) * this.rowCount;
+  }
+
+  get dashboardVictoryPosition(): number {
+    if (this.rowCount <= 1 && !this.removeOnMatch) {
+      return this.dashboardPosition;
+    }
+    return this.dashboardPosition / 2 - 75 - this.cardSpacing;
+  }
+
   get dashboardTransform(): string {
-    const y = (this.cardSpacing + this.cardSize) * this.rowCount;
+    const y = this.dashboardPosition;
     return `translate(0, ${y})`;
   }
 
