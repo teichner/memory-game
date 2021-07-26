@@ -201,4 +201,12 @@ export class GameComponent implements OnInit {
   isFaceUp(card: Card): boolean {
     return card.state === CardState.FACE_UP;
   }
+
+  /*
+   * SVG lighting looks different under Firefox.
+   */
+  get isInGecko(): boolean {
+    const ua = window?.navigator.userAgent;
+    return !!ua && ua.indexOf('Gecko') >= 0 && ua.indexOf('WebKit') < 0;
+  }
 }
