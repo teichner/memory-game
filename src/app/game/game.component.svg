@@ -7,7 +7,7 @@
     </defs>
     <filter id="card-lighting">
         <feDiffuseLighting result="light" lighting-color="white">
-            <fePointLight x="20" y="0" z="120" />
+            <fePointLight x="-50" y="5" z="70" />
         </feDiffuseLighting>
         <feComposite in="SourceGraphic" in2="light" result="new-image" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" ></feComposite>
         <feComposite in="new-image" in2="SourceGraphic" operator="in" />
